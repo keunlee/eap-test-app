@@ -9,6 +9,10 @@ node('node') {
           checkout scm
        }
 
+       stage('Test'){
+         sh 'echo "testing"'
+       }
+
     }
     catch (err) {
         throw err
