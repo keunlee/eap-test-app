@@ -1,20 +1,15 @@
-node('master') {
-
-    currentBuild.result = "SUCCESS"
-
-    try {
-
-       stage('Checkout'){
-
-          checkout scm
-       }
-
-       stage('Test'){
-         sh 'echo "testing"'
-       }
-
+pipeline {
+    agent {
+        docker {
+            image 'maven:3-alpine' 
+            args '-v /root/.m2:/root/.m2' 
+        }
     }
-    catch (err) {
-        throw err
+    stages {
+        stage('Build') { 
+            steps {
+                sh 'echo "hello world"' 
+            }
+        }
     }
 }
