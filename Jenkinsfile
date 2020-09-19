@@ -1,14 +1,17 @@
 pipeline {
     agent {
-        docker {
-            image 'maven:3-alpine' 
-            args '-v /root/.m2:/root/.m2' 
-        }
+      label 'docker'
     }
+
     stages {
         stage('Build') { 
+            agent {
+              label 'docker'
+              image 'node:7-alpine'
+	    }
             steps {
-                sh 'echo "hello world"' 
+                sh 'echo "hello world"'
+                sh 'node --version' 
             }
         }
     }
