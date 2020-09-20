@@ -35,59 +35,34 @@
 //   }
 // }
 
-
-pipeline {
-  agent {
-    kubernetes {
-      defaultContainer 'jnlp'
-      yaml """
+podTemplate(yaml: """
 apiVersion: v1
 kind: Pod
-metadata:
-labels:
-  component: ci
 spec:
-  # Use service account that can deploy to all namespaces
   serviceAccountName: jenkins-operator-jenkinscicd
   containers:
-  - name: maven
-    image: maven:latest
-    command:
-    - cat
-    tty: true
-    volumeMounts:
-      - mountPath: "/root/.m2"
-        name: m2
   - name: docker
-    image: docker:latest
-    command:
-    - cat
+    image: docker:1.11
+    command: ['cat']
     tty: true
     volumeMounts:
-    - mountPath: /var/run/docker.sock
-      name: docker-sock
+    - name: dockersock
+      mountPath: /var/run/docker.sock
   volumes:
-    - name: docker-sock
-      hostPath:
-        path: /var/run/docker.sock
-    - name: m2
-      persistentVolumeClaim:
-        claimName: m2
-
+  - name: dockersock
+    hostPath:
+      path: /var/run/docker.sock
 """
-}
-   }
-    node(POD_LABEL) { 
-        stages {
-            stage('Test Docker') {
-                steps {
-                    container('docker') {
-                    sh """
-                        docker build -t spring-petclinic-demo:$BUILD_NUMBER .
-                    """
-                    }
-                }
-            }
-        }
+  ) {
+
+  def image = "jenkins/jnlp-slave"
+  node(POD_LABEL) {
+    stage('Build Docker image') {
+    //   git 'https://github.com/jenkinsci/docker-jnlp-slave.git'
+      container('docker') {
+        // sh "docker build -t ${image} ."
+        docker login -u user -p test quayecosystem-quay
+      }
     }
+  }
 }
