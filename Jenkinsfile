@@ -34,19 +34,18 @@
 //     }
 //   }
 // }
-
-pipeline {
-    options {
-        disableConcurrentBuilds()
-    }
-    agent {
-        kubernetes {
-            label 'docker-in-docker-maven'
-            yaml """
-apiVersion: v1
-kind: Pod
+podTemplate(yaml:'''
 spec:
 containers:
+- name: jnlp
+  image: jenkins/jnlp-slave:4.0.1-1
+  volumeMounts:
+  - name: cache
+    mountPath: /home/jenkins
+  env:
+  - name: HOME
+    value: /home/jenkins
+
 - name: docker-client
   image: docker:19.03.1
   command: ['sleep', '99d']
@@ -65,19 +64,13 @@ containers:
         mountPath: /var/lib/docker
 volumes:
   - name: cache
-    hostPath:
-      path: /tmp
-      type: Directory
-"""
-        }
+    emptyDir: {}
+''') {
+  node(POD_LABEL) {
+    stage('Build a Maven project') {
+      container('docker-client') {
+        sh 'docker version'
+      }
     }
-    stages {
-        stage('Docker Build') {
-            steps {
-                container('docker-client') {
-                    sh 'docker version'
-                }
-            }
-        }
-    }
+  }
 }
