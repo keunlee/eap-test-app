@@ -7,7 +7,7 @@ spec:
     emptyDir: {}
   serviceAccountName: jenkins-operator-jenkinscicd
   containers:
-  - name: oc
+  - name: openshift
     image: openshift/origin-cli
     command: ['cat']
     tty: true
@@ -47,6 +47,8 @@ spec:
         }
 
         stage('validate openshift') {
+            container('openshift')
+            sh 'oc get version'
             sh 'oc get nodes'
         }
     }
