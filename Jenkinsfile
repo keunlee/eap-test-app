@@ -43,7 +43,7 @@ spec:
   serviceAccountName: jenkins-operator-jenkinscicd
   containers:  
   - name: docker-client
-    image: docker:19.03.1
+    image: docker:19.03.0
     command: ['sleep', '99d']
     env:
       - name: DOCKER_HOST
@@ -53,7 +53,7 @@ spec:
         mountPath: /tmp/repository
 
   - name: docker-daemon
-    image: docker:19.03.1-dind
+    image: docker:19.03.0-dind
     env:
       - name: DOCKER_TLS_CERTDIR
         value: ""
