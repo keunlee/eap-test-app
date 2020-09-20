@@ -72,15 +72,10 @@ volumes:
         }
     }
     stages {
-        stage('Checkout') {
-            steps {
-                git 'https://github.com/jenkinsci/docker-jnlp-slave.git'
-            }
-        }
         stage('Docker Build') {
             steps {
                 container('docker-client') {
-                    sh 'docker version && DOCKER_BUILDKIT=1 docker build --progress plain -t testing .'
+                    sh 'docker version'
                 }
             }
         }
