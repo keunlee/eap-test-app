@@ -7,6 +7,7 @@ def ecrRepoName = "my-jenkins"
 def tag = "$ecrRepoName:latest"
 
 podTemplate(
+        label: label,
         containers: [
                 containerTemplate(name: 'jnlp', image: 'jenkins/jnlp-slave:alpine'),
                 containerTemplate(name: 'docker', image: 'docker', command: 'cat', ttyEnabled: true),
@@ -15,7 +16,7 @@ podTemplate(
                 hostPathVolume(hostPath: '/var/run/docker.sock', mountPath: '/var/run/docker.sock'),
             ],
         ) {
-    node(POD_LABEL) {
+    node(label) {
         dir(workdir) {
             stage('Docker Build') {
                 container('docker') {
