@@ -21,7 +21,10 @@ podTemplate(
             stage('Docker Build') {
                 container('docker') {
                     echo "Building docker image..."
-                    sh "docker version"
+                    sh "echo 'hello world'"
+                    sh "docker -v"
+                    sh "docker info"
+
                 }
             }
         }
