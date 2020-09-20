@@ -69,7 +69,7 @@ volumes:
   node(POD_LABEL) {
     stage('Build a Maven project') {
       container('docker-client') {
-        sh 'docker version'
+        sh 'echo "hello"'
       }
     }
   }
