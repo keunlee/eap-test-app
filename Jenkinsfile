@@ -50,6 +50,8 @@ spec:
             container('openshift') {
                 sh 'oc version'
                 sh 'oc get nodes'
+                sh 'oc project jboss-eap-test-001'
+                sh 'oc start-build eap-app-build-artifacts'
             }
         }
     }
