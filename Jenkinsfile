@@ -36,22 +36,37 @@
 // }
 
 podTemplate(yaml: """
+
 apiVersion: v1
 kind: Pod
 spec:
   serviceAccountName: jenkins-operator-jenkinscicd
-  containers:
-  - name: docker
-    image: docker:latest
-    command: ['cat']
-    tty: true
+  containers:  
+  - name: docker-client
+    image: docker:19.03.1
+    command: ['sleep', '99d']
+    env:
+      - name: DOCKER_HOST
+        value: tcp://localhost:2375
     volumeMounts:
-    - name: dockersock
-      mountPath: /var/run/docker.sock
+      - name: cache
+        mountPath: /tmp/repository
+
+  - name: docker-daemon
+    image: docker:19.03.1-dind
+    env:
+      - name: DOCKER_TLS_CERTDIR
+        value: ""
+    securityContext:
+      privileged: true
+    volumeMounts:
+      - name: cache
+        mountPath: /var/lib/docker
   volumes:
-  - name: dockersock
-    hostPath:
-      path: /var/run/docker.sock
+    - name: cache
+      hostPath:
+        path: /tmp
+        type: Directory
 """
   ) {
 
@@ -61,7 +76,7 @@ spec:
     //   git 'https://github.com/jenkinsci/docker-jnlp-slave.git'
       container('docker') {
         // sh "docker build -t ${image} ."
-        sh "docker login -u user -p test quayecosystem-quay"
+        sh "docker version"
       }
     }
   }
