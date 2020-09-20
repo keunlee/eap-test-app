@@ -39,7 +39,6 @@
 pipeline {
   agent {
     kubernetes {
-      label POD_LABEL
       defaultContainer 'jnlp'
       yaml """
 apiVersion: v1
@@ -78,15 +77,17 @@ spec:
 """
 }
    }
-  stages {
-    stage('Test Docker') {
-      steps {
-        container('docker') {
-          sh """
-            docker build -t spring-petclinic-demo:$BUILD_NUMBER .
-          """
+    node(POD_LABEL) { 
+        stages {
+            stage('Test Docker') {
+                steps {
+                    container('docker') {
+                    sh """
+                        docker build -t spring-petclinic-demo:$BUILD_NUMBER .
+                    """
+                    }
+                }
+            }
         }
-      }
     }
-  }
 }
