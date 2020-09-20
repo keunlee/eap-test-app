@@ -7,6 +7,10 @@ spec:
     emptyDir: {}
   serviceAccountName: jenkins-operator-jenkinscicd
   containers:
+  - name: oc
+    image: openshift/origin-cli
+    command: ['cat']
+    tty: true
   - name: maven
     image: maven:3.3.9-jdk-8-alpine
     command: ['cat']
