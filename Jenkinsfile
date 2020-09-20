@@ -61,7 +61,7 @@ spec:
     //   git 'https://github.com/jenkinsci/docker-jnlp-slave.git'
       container('docker') {
         // sh "docker build -t ${image} ."
-        sh "docker version"
+        sh "docker login -u user -p test quayecosystem-quay"
       }
     }
   }
