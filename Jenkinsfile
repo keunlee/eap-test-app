@@ -41,5 +41,9 @@ spec:
                 sh 'mvn --version'
             }
         }
+
+        stage('validate openshift') {
+            sh 'oc get nodes'
+        }
     }
 }
