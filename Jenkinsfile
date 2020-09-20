@@ -1,32 +1,35 @@
-def label = "docker-jenkins-${UUID.randomUUID().toString()}"
-def home = "/home/jenkins"
-def workspace = "${home}/workspace/build-docker-jenkins"
-def workdir = "${workspace}/src/localhost/docker-jenkins/"
-
-def ecrRepoName = "my-jenkins"
-def tag = "$ecrRepoName:latest"
-
-podTemplate(
-        label: label,
-        serviceAccount: 'jenkins-operator-jenkinscicd',
-        containers: [
-                containerTemplate(name: 'jnlp', image: 'jenkins/jnlp-slave:alpine'),
-                containerTemplate(name: 'docker', image: 'docker:18.06.1-ce-dind', command: 'cat', ttyEnabled: true),
-        ],
-        volumes: [
-            hostPathVolume(hostPath: '/var/run/docker.sock', mountPath: '/var/run/docker.sock'),
-        ]) {
-
-        
-    node(label) {
-        stage('Docker Build') {
-            container('docker') {
-                echo "Building docker image..."
-                sh "echo 'hello world'"
-                sh "newgrp docker"
-                sh "docker -v"
-                sh "docker info"
-            }
+*/
+podTemplate(yaml: '''
+apiVersion: v1
+kind: Pod
+spec:
+  volumes:
+  - name: docker-socket
+    emptyDir: {}
+  serviceAccountName: jenkins-operator-jenkinscicd
+  containers:
+  - name: docker
+    image: docker:19.03.1
+    command:
+    - sleep
+    args:
+    - 99d
+    volumeMounts:
+    - name: docker-socket
+      mountPath: /var/run
+  - name: docker-daemon
+    image: docker:19.03.1-dind
+    securityContext:
+      privileged: true
+    volumeMounts:
+    - name: docker-socket
+      mountPath: /var/run
+''') {
+    node(POD_LABEL) {
+        writeFile file: 'Dockerfile', text: 'FROM scratch'
+        container('docker') {
+            sh 'docker version'
+            sh 'docker info'
         }
     }
 }
