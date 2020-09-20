@@ -1,9 +1,4 @@
-podTemplate(containers: [
-  containerTemplate(name: 'maven', image: 'maven:3.6.0-jdk-8-alpine', ttyEnabled: true, command: 'cat')
-  ], volumes: [
-  persistentVolumeClaim(mountPath: '/root/.m2/repository', claimName: 'maven-repo', readOnly: false)
-  ],  
-  yaml: '''
+podTemplate(yaml: '''
 apiVersion: v1
 kind: Pod
 spec:
@@ -12,6 +7,10 @@ spec:
     emptyDir: {}
   serviceAccountName: jenkins-operator-jenkinscicd
   containers:
+  - name: maven
+    image: maven:3.3.9-jdk-8-alpine
+    command: ['cat']
+    tty: true
   - name: docker
     image: docker:19.03.1
     command:
@@ -30,10 +29,17 @@ spec:
       mountPath: /var/run
 ''') {
     node(POD_LABEL) {
-        writeFile file: 'Dockerfile', text: 'FROM scratch'
-        container('docker') {
-            sh 'docker version'
-            sh 'docker info'
+        stage('validate docker') {
+            container('docker') {
+                sh 'docker version'
+                sh 'docker info'
+            }
+        }
+
+        stage('validate maven') {
+            container('maven') {
+                sh 'mvn --version'
+            }
         }
     }
 }
