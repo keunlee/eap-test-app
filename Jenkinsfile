@@ -39,6 +39,7 @@ podTemplate(yaml: """
 apiVersion: v1
 kind: Pod
 spec:
+  serviceAccountName: jenkins-operator
   containers:
   - name: docker
     image: docker:1.11
