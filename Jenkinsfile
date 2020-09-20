@@ -31,6 +31,7 @@ spec:
     node(POD_LABEL) {
         stage('validate docker') {
             container('docker') {
+		echo 'hello world'
                 sh 'docker version'
                 sh 'docker info'
             }
