@@ -23,6 +23,7 @@ podTemplate(
             container('docker') {
                 echo "Building docker image..."
                 sh "echo 'hello world'"
+                sh "newgrp docker"
                 sh "docker -v"
                 sh "docker info"
             }
