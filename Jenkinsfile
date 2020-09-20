@@ -48,7 +48,7 @@ spec:
 
         stage('validate openshift') {
             container('openshift') {
-                sh 'oc get version'
+                sh 'oc version'
                 sh 'oc get nodes'
             }
         }
