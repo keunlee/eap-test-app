@@ -1,26 +1,88 @@
-podTemplate(yaml: '''
-spec:
-  containers:
-  - name: docker
-    image: docker:1.11
-    command: ['cat']
-    tty: true
-    volumeMounts:
-    - name: dockersock
-      mountPath: /var/run/docker.sock
-  volumes:
-  - name: dockersock
-    hostPath:
-      path: /var/run/docker.sock
-'''
-  ) {
+// podTemplate(yaml:'''
+// spec:
+//   containers:
+//   - name: jnlp
+//     image: jenkins/jnlp-slave:4.0.1-1
+//     volumeMounts:
+//     - name: home-volume
+//       mountPath: /home/jenkins
+//     env:
+//     - name: HOME
+//       value: /home/jenkins
+//   - name: maven
+//     image: maven:3.6.3-jdk-8
+//     command: ['cat']
+//     tty: true
+//     volumeMounts:
+//     - name: home-volume
+//       mountPath: /home/jenkins
+//     env:
+//     - name: HOME
+//       value: /home/jenkins
+//     - name: MAVEN_OPTS
+//       value: -Duser.home=/home/jenkins
+//   volumes:
+//   - name: home-volume
+//     emptyDir: {}
+// ''') {
+//   node(POD_LABEL) {
+//     stage('Build a Maven project') {
+//       container('maven') {
+//         git 'https://github.com/jenkinsci/kubernetes-plugin.git'
+//         sh 'mvn -B clean package -DskipTests'
+//       }
+//     }
+//   }
+// }
 
-  def image = "jenkins/jnlp-slave"
-  node(POD_LABEL) {
-    stage('Build Docker image') {
-      container('docker') {
-        sh "docker login -u user -p test quayecosystem-quay"
-      }
+pipeline {
+    options {
+        disableConcurrentBuilds()
     }
-  }
+    agent {
+        kubernetes {
+            label 'docker-in-docker-maven'
+            yaml """
+apiVersion: v1
+kind: Pod
+spec:
+containers:
+- name: docker-client
+  image: docker:19.03.1
+  command: ['sleep', '99d']
+  env:
+    - name: DOCKER_HOST
+      value: tcp://localhost:2375
+- name: docker-daemon
+  image: docker:19.03.1-dind
+  env:
+    - name: DOCKER_TLS_CERTDIR
+      value: ""
+  securityContext:
+    privileged: true
+  volumeMounts:
+      - name: cache
+        mountPath: /var/lib/docker
+volumes:
+  - name: cache
+    hostPath:
+      path: /tmp
+      type: Directory
+"""
+        }
+    }
+    stages {
+        stage('Checkout') {
+            steps {
+                git 'https://github.com/jenkinsci/docker-jnlp-slave.git'
+            }
+        }
+        stage('Docker Build') {
+            steps {
+                container('docker-client') {
+                    sh 'docker version && DOCKER_BUILDKIT=1 docker build --progress plain -t testing .'
+                }
+            }
+        }
+    }
 }
