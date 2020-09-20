@@ -42,7 +42,7 @@ spec:
   serviceAccountName: jenkins-operator-jenkinscicd
   containers:
   - name: docker
-    image: docker:1.11
+    image: docker:latest
     command: ['cat']
     tty: true
     volumeMounts:
@@ -61,7 +61,7 @@ spec:
     //   git 'https://github.com/jenkinsci/docker-jnlp-slave.git'
       container('docker') {
         // sh "docker build -t ${image} ."
-        docker login -u user -p test quayecosystem-quay
+        sh "docker version"
       }
     }
   }
