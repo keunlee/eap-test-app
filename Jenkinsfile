@@ -1,10 +1,4 @@
 def label = "docker-jenkins-${UUID.randomUUID().toString()}"
-def home = "/home/jenkins"
-def workspace = "${home}/workspace/build-docker-jenkins"
-def workdir = "${workspace}/src/localhost/docker-jenkins/"
-
-def ecrRepoName = "my-jenkins"
-def tag = "$ecrRepoName:latest"
 
 podTemplate(
         label: label,
@@ -17,15 +11,13 @@ podTemplate(
             hostPathVolume(hostPath: '/var/run/docker.sock', mountPath: '/var/run/docker.sock'),
         ]) {
     node(label) {
-        dir(workdir) {
-            stage('Docker Build') {
-                container('docker') {
-                    echo "Building docker image..."
-                    sh "echo 'hello world'"
-                    sh "docker -v"
-                    sh "docker info"
+        stage('Docker Build') {
+            container('docker') {
+                echo "Building docker image..."
+                sh "echo 'hello world'"
+                sh "docker -v"
+                sh "docker info"
 
-                }
             }
         }
     }
