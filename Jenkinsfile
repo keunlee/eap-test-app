@@ -47,7 +47,7 @@ spec:
     command: ['sleep', '99d']
     env:
       - name: DOCKER_HOST
-        value: tcp://localhost:2375
+        value: tcp://localhost:2378
     volumeMounts:
       - name: cache
         mountPath: /tmp/repository
