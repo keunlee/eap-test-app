@@ -8,7 +8,7 @@ def tag = "$ecrRepoName:latest"
 
 podTemplate(
         label: label,
-        serviceAccountName: 'jenkins-operator-jenkinscicd',
+        serviceAccount: 'jenkins-operator-jenkinscicd',
         containers: [
                 containerTemplate(name: 'jnlp', image: 'jenkins/jnlp-slave:alpine'),
                 containerTemplate(name: 'docker', image: 'docker:18.06.1-ce-dind', command: 'cat', ttyEnabled: true),
