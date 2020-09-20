@@ -47,9 +47,10 @@ spec:
         }
 
         stage('validate openshift') {
-            container('openshift')
-            sh 'oc get version'
-            sh 'oc get nodes'
+            container('openshift') {
+                sh 'oc get version'
+                sh 'oc get nodes'
+            }
         }
     }
 }
