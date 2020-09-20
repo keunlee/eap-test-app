@@ -1,35 +1,66 @@
-podTemplate(yaml:'''
+// podTemplate(yaml:'''
+// spec:
+//   containers:
+//   - name: jnlp
+//     image: jenkins/jnlp-slave:4.0.1-1
+//     volumeMounts:
+//     - name: home-volume
+//       mountPath: /home/jenkins
+//     env:
+//     - name: HOME
+//       value: /home/jenkins
+//   - name: maven
+//     image: maven:3.6.3-jdk-8
+//     command: ['cat']
+//     tty: true
+//     volumeMounts:
+//     - name: home-volume
+//       mountPath: /home/jenkins
+//     env:
+//     - name: HOME
+//       value: /home/jenkins
+//     - name: MAVEN_OPTS
+//       value: -Duser.home=/home/jenkins
+//   volumes:
+//   - name: home-volume
+//     emptyDir: {}
+// ''') {
+//   node(POD_LABEL) {
+//     stage('Build a Maven project') {
+//       container('maven') {
+//         git 'https://github.com/jenkinsci/kubernetes-plugin.git'
+//         sh 'mvn -B clean package -DskipTests'
+//       }
+//     }
+//   }
+// }
+
+podTemplate(yaml: """
+apiVersion: v1
+kind: Pod
 spec:
   containers:
-  - name: jnlp
-    image: jenkins/jnlp-slave:4.0.1-1
-    volumeMounts:
-    - name: home-volume
-      mountPath: /home/jenkins
-    env:
-    - name: HOME
-      value: /home/jenkins
-  - name: maven
-    image: maven:3.6.3-jdk-8
+  - name: docker
+    image: docker:1.11
     command: ['cat']
     tty: true
     volumeMounts:
-    - name: home-volume
-      mountPath: /home/jenkins
-    env:
-    - name: HOME
-      value: /home/jenkins
-    - name: MAVEN_OPTS
-      value: -Duser.home=/home/jenkins
+    - name: dockersock
+      mountPath: /var/run/docker.sock
   volumes:
-  - name: home-volume
-    emptyDir: {}
-''') {
+  - name: dockersock
+    hostPath:
+      path: /var/run/docker.sock
+"""
+  ) {
+
+  def image = "jenkins/jnlp-slave"
   node(POD_LABEL) {
-    stage('Build a Maven project') {
-      container('maven') {
-        git 'https://github.com/jenkinsci/kubernetes-plugin.git'
-        sh 'mvn -B clean package -DskipTests'
+    stage('Build Docker image') {
+    //   git 'https://github.com/jenkinsci/docker-jnlp-slave.git'
+      container('docker') {
+        // sh "docker build -t ${image} ."
+        docker login -u user -p test quayecosystem-quay
       }
     }
   }
