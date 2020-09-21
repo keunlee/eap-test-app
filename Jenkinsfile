@@ -12,7 +12,7 @@ spec:
     command: ['cat']
     tty: true
   - name: maven
-    image: maven:3.3.9-jdk-8-alpine
+    image: maven:3.6.3-openjdk-8
     command: ['cat']
     tty: true
   - name: docker
@@ -40,11 +40,12 @@ spec:
         stage('Build') {
             git 'https://github.com/keunlee/eap-test-app.git'
             sh 'pwd;ls'
-            sh 'cd eap-demo;pwd;ls'
-            // container('maven') {
-            //     sh 'mvn clean build package'
-            //     sh 'ls target'
-            // }
+            sh 'cd eap-demo;'
+            container('maven') {
+                sh 'pwd;ls'
+                // sh 'mvn clean build'
+                
+            }
         }         
 
         // stage('validate docker') {
