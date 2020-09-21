@@ -33,23 +33,26 @@ spec:
       mountPath: /var/run
 ''') {
     node(POD_LABEL) {
-        // stage('Check Out') {
-        //     git 'https://github.com/keunlee/eap-test-app.git'
-        // }
+        stage('Check Out') {
+            git 'https://github.com/keunlee/eap-test-app.git'
+        }
 
-        // stage('Build + Test') {   
-        //     container('maven') {
-        //         sh 'mvn -f eap-demo/pom.xml clean compile package'
-        //     }
-        // }         
+        stage('Build + Test') {   
+            // container('maven') {
+            //     sh 'mvn -f eap-demo/pom.xml clean compile package'
+            // }
+        }         
 
         stage('Push Artifact') {
-            sh 'sudo mkdir -p /etc/docker/certs.d/quayecosystem-quay-example-quayio-private-001.apps.okd.thekeunster.local'
-            sh 'sudo ls /etc/docker/certs.d'
-            sh 'sudo systemctl status docker'
-            // container('docker') {
-            //     sh 'docker login -u kelee -p password quayecosystem-quay'
-            // }
+        }
+
+        stage('Deploy') {
+            container('openshift') {
+                sh """
+                oc version
+                oc get nodes
+                """
+            }
         }
 
         // stage('validate maven') {
