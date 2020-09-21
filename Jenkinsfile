@@ -37,9 +37,9 @@ spec:
             git 'https://github.com/keunlee/eap-test-app.git'
         }
 
-        stage('Build') {   
+        stage('Build + Test') {   
             container('maven') {
-                sh 'mvn -f eap-demo/pom.xml clean'
+                sh 'mvn -f eap-demo/pom.xml clean compile package'
             }
         }         
 
