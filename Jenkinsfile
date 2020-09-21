@@ -38,12 +38,16 @@ spec:
         }
 
         stage('Build + Test') {   
-            // container('maven') {
-            //     sh 'mvn -f eap-demo/pom.xml clean compile package'
-            // }
+            container('maven') {
+                sh """
+                cd eap-demo
+                mvn clean compile test package
+                """
+            }
         }         
 
         stage('Push Artifact') {
+            sh 'echo "pushing artifact"'
         }
 
         stage('Deploy') {
