@@ -33,7 +33,12 @@ spec:
       mountPath: /var/run
 ''') {
     node(POD_LABEL) {
+        stage('Check Out') {
+            
+        }
+
         stage('Build') {
+            git 'https://github.com/keunlee/eap-test-app.git'
             sh 'pwd'
             sh 'ls'
             // container('maven') {
