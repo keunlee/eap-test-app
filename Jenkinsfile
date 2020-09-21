@@ -52,28 +52,21 @@ spec:
 
         stage('Deploy') {
             container('openshift') {
+                script {
+                    try {
+                        sh "oc delete wildflyservers.wildfly.org eap-demo"
+                    } catch (err) {
+                        echo err.getMessage()
+                    }
+                }
+
                 sh """
                 cd eap-demo
                 oc project jboss-eap-test-001
-                oc delete wildflyservers.wildfly.org eap-demo
+                
                 oc create -f eap-demo-instance.yaml
                 """
             }
         }
-
-        // stage('validate maven') {
-        //     container('maven') {
-        //         sh 'mvn --version'
-        //     }
-        // }
-
-        // stage('validate openshift') {
-        //     container('openshift') {
-        //         sh 'oc version'
-        //         sh 'oc get nodes'
-        //         sh 'oc project jboss-eap-test-001'
-        //         sh 'oc start-build eap-app-build-artifacts'
-        //     }
-        // }
     }
 }
