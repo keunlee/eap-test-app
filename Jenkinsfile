@@ -50,6 +50,7 @@ spec:
             container('openshift') {
                 sh """
                 cd eap-demo
+                oc project jboss-eap-test-001
                 oc delete wildflyservers.wildfly.org eap-demo
                 oc create -f eap-demo-instance.yaml
                 """
