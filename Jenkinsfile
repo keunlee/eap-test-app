@@ -39,8 +39,7 @@ spec:
 
         stage('Build') {   
             container('maven') {
-                sh 'cd eap-demo;'
-                sh 'mvn clean build package'
+                sh 'mvn -f eap-demo/pom.xml clean'
             }
         }         
 
