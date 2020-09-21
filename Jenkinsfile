@@ -45,7 +45,7 @@ spec:
 
         stage('Push Artifact') {
             container('docker') {
-                sh 'docker login -u kelee -p password quayecosystem-quay-example-quayio-private-001.apps.okd.thekeunster.local'
+                sh 'docker login -u kelee -p password quayecosystem-quay'
             }
         }
 
