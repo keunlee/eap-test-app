@@ -4,7 +4,7 @@
 FROM registry.redhat.io/jboss-eap-7/eap73-openjdk8-openshift-rhel7
 
 # Copy war to deployments folder
-COPY target/kitchensink.war $JBOSS_HOME/standalone/deployments/ROOT.war
+COPY target/eap-demo.war $JBOSS_HOME/standalone/deployments/ROOT.war
 
 # User root to modify war owners
 USER root
