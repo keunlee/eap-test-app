@@ -33,26 +33,33 @@ spec:
       mountPath: /var/run
 ''') {
     node(POD_LABEL) {
-        stage('validate docker') {
-            container('docker') {
-                sh 'docker version'
-                sh 'docker info'
-            }
-        }
+        stage('Build') {
+            sh 'pwd'
+            // container('maven') {
+            //     sh 'mvn --version'
+            // }
+        }         
 
-        stage('validate maven') {
-            container('maven') {
-                sh 'mvn --version'
-            }
-        }
+        // stage('validate docker') {
+        //     container('docker') {
+        //         sh 'docker version'
+        //         sh 'docker info'
+        //     }
+        // }
 
-        stage('validate openshift') {
-            container('openshift') {
-                sh 'oc version'
-                sh 'oc get nodes'
-                sh 'oc project jboss-eap-test-001'
-                sh 'oc start-build eap-app-build-artifacts'
-            }
-        }
+        // stage('validate maven') {
+        //     container('maven') {
+        //         sh 'mvn --version'
+        //     }
+        // }
+
+        // stage('validate openshift') {
+        //     container('openshift') {
+        //         sh 'oc version'
+        //         sh 'oc get nodes'
+        //         sh 'oc project jboss-eap-test-001'
+        //         sh 'oc start-build eap-app-build-artifacts'
+        //     }
+        // }
     }
 }
