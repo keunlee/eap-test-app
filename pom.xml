@@ -367,7 +367,7 @@
                 <module>jaxws-pojo</module>
                 <module>jaxws-retail</module>
                 <module>jsonp</module> -->
-                <module>kitchensink</module>
+                <module>eap-demo</module>
                 <!-- <module>kitchensink-angularjs</module>
                 <module>kitchensink-ear</module>
                 <module>kitchensink-jsp</module>
