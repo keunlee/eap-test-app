@@ -34,17 +34,13 @@ spec:
 ''') {
     node(POD_LABEL) {
         stage('Check Out') {
-            
+            git 'https://github.com/keunlee/eap-test-app.git'
         }
 
-        stage('Build') {
-            git 'https://github.com/keunlee/eap-test-app.git'
-            sh 'pwd;ls'
-            sh 'cd eap-demo;'
+        stage('Build') {   
             container('maven') {
-                sh 'pwd;ls'
-                // sh 'mvn clean build'
-                
+                sh 'cd eap-demo;'
+                sh 'mvn clean build package'
             }
         }         
 
