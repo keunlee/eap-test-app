@@ -1,0 +1,8 @@
+apiVersion: wildfly.org/v1alpha1
+kind: WildFlyServer
+metadata:
+  name: eap-demo
+  namespace: jboss-eap-test-001
+spec:
+  applicationImage: 'quay.io/kelee/custom-eap:v0.1.0'
+  replicas: 1

@@ -49,8 +49,9 @@ spec:
         stage('Deploy') {
             container('openshift') {
                 sh """
-                oc version
-                oc get nodes
+                cd eap-demo
+                oc delete wildflyservers.wildfly.org eap-demo
+                oc create -f eap-demo-instance.yaml
                 """
             }
         }
