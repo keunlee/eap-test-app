@@ -35,6 +35,7 @@ spec:
     node(POD_LABEL) {
         stage('Build') {
             sh 'pwd'
+            sh 'ls'
             // container('maven') {
             //     sh 'mvn --version'
             // }
