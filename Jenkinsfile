@@ -44,7 +44,7 @@ spec:
         // }         
 
         stage('Push Artifact') {
-            sh 'mkdir -p /etc/docker/certs.d/quayecosystem-quay-example-quayio-private-001.apps.okd.thekeunster.local'
+            sh 'sudo mkdir -p /etc/docker/certs.d/quayecosystem-quay-example-quayio-private-001.apps.okd.thekeunster.local'
             sh 'ls /etc/docker/certs.d'
             container('docker') {
                 sh 'docker login -u kelee -p password quayecosystem-quay'
