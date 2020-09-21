@@ -39,11 +39,12 @@ spec:
 
         stage('Build') {
             git 'https://github.com/keunlee/eap-test-app.git'
-            sh 'cd eap-demo'
-            container('maven') {
-                sh 'mvn clean build package'
-                sh 'ls target'
-            }
+            sh 'pwd;ls'
+            sh 'cd eap-demo;pwd;ls'
+            // container('maven') {
+            //     sh 'mvn clean build package'
+            //     sh 'ls target'
+            // }
         }         
 
         // stage('validate docker') {
